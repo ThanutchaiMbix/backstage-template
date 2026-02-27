@@ -8,13 +8,11 @@ metadata:
     - spring-boot
     - java
     - maven
-    - circleci
     - renovate
-    - sonarqube
     - kubernetes
     - argocd
 spec:
-  owner: piomin
+  owner: geust
   system: microservices
   type: service
 
@@ -34,7 +32,7 @@ spec:
         orgName:
           title: Organization name
           type: string
-          default: piomin
+          default: geust
         appName:
           title: App name
           type: string
@@ -118,24 +116,6 @@ spec:
         defaultBranch: ${{ parameters.repoBranchName }}
         sourcePath: ./gitops
         repoVisibility: public
-
-    - id: sonarqube
-      name: Follow new project on Sonarcloud
-      action: http:backstage:request
-      input:
-        method: 'POST'
-        path: '/proxy/sonarqube/projects/create?name=${{ parameters.appName }}&organization=${{ parameters.orgName }}&project=${{ parameters.orgName }}_${{ parameters.appName }}'
-        headers:
-          content-type: 'application/json'
-
-    - id: circleci
-      name: Follow new project on CircleCI
-      action: http:backstage:request
-      input:
-        method: 'POST'
-        path: '/proxy/circleci/api/project/gh/${{ parameters.orgName }}/${{ parameters.appName }}/follow'
-        headers:
-          content-type: 'application/json'
 
     - id: argocd
       name: Create New Application in Argo CD
