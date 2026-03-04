@@ -182,6 +182,7 @@ spec:
 #        defaultBranch: ${{ parameters.repoBranchName }}
 #        protectDefaultBranch: false
         path: 'manifests'
+        projectName: default
 
   output:
     links:
