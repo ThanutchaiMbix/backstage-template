@@ -171,18 +171,37 @@ spec:
         webhookUrl: http://el-${{ parameters.appName }}-${{ parameters.namespace }}.${{ parameters.clusterDomain }}
         contentType: 'json'
         
-    - id: create-argocd-resources
-      name: Create ArgoCD Resources
-      action: argocd:create-resources
+    - id: create-argocd-app
+      name: Create New Application in Argo CD
+      action: http:backstage:request
       input:
-        appName: ${{ parameters.appName }}
-        argoInstance: main
-        namespace: ${{ parameters.namespace }}
-        repoUrl: https://github.com/${{ parameters.orgName }}/${{ parameters.appName }}-config.git
-#        defaultBranch: ${{ parameters.repoBranchName }}
-#        protectDefaultBranch: false
-        path: 'manifests'
-        projectName: 'default'
+        method: 'POST'
+        # วิ่งผ่าน Proxy ที่เราตั้งค่า SSL/Cert ไว้แล้ว
+        path: '/proxy/argocd/api/applications'
+        headers:
+          content-type: 'application/json'
+        body:
+          apiVersion: argoproj.io/v1alpha1
+          kind: Application
+          metadata:
+            name: ${{ parameters.appName }}
+            namespace: openshift-gitops
+          spec:
+            # ระบุให้ใช้โปรเจกต์ default ที่มีอยู่แล้ว (ArgoCD จะไม่ด่าเรื่อง Duplicate)
+            project: 'default' 
+            source:
+              repoURL: https://github.com/${{ parameters.orgName }}/${{ parameters.appName }}-config.git
+              targetRevision: HEAD
+              path: manifests
+            destination:
+              server: https://kubernetes.default.svc
+              namespace: ${{ parameters.namespace }}
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+              syncOptions:
+                - CreateNamespace=true
 
   output:
     links:
