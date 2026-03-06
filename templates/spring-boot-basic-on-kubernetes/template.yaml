@@ -29,6 +29,7 @@ spec:
         - namespace
         - description
         - secretsPath
+        - vaultSecretEngine
       properties:
         orgName:
           title: Organization name
@@ -70,6 +71,10 @@ spec:
           title: Vault secrets path
           type: string
           default: my-service
+        vaultSecretEngine:
+          title: Vault secrets engine          
+          type: string
+          default: secret
   steps:
     - id: sourceCodeTemplate
       name: Generating the Source Code Component
@@ -84,6 +89,7 @@ spec:
           javaPackage: ${{ parameters.javaPackage }}
           apiPath: ${{ parameters.apiPath }}
           secretsPath: ${{ parameters.secretsPath }}
+          vaultSecretEngine: ${{ parameters.vaultSecretEngine }}
 
     - id: publish
       name: Publishing to the Source Code Repository
