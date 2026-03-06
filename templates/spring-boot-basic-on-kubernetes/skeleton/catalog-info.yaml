@@ -4,20 +4,20 @@ metadata:
   name: ${{ values.appName }}
   title: ${{ values.appName }}
   annotations:
-    circleci.com/project-slug: github/${{ values.orgName }}/${{ values.appName }}
+    vault.io/secrets-path: ${{ values.secretsPath | dump}}
     github.com/project-slug: ${{ values.orgName }}/${{ values.appName }}
-    sonarqube.org/project-key: ${{ values.orgName }}_${{ values.appName }}
     backstage.io/kubernetes-id: ${{ values.appName }}
+    backstage.io/kubernetes-label-selector: 'app=${{ values.appName }}'
     argocd/app-name: ${{ values.appName }}
     prometheus.io/rule: container_memory_usage_bytes{pod=~"${{ values.appName }}-.*"}|pod,rate(container_cpu_usage_seconds_total{pod=~"${{ values.appName }}-.*"}[5m])|pod
   tags:
     - spring-boot
     - java
     - maven
-    - circleci
-    - renovate
-    - sonarqube
-spec:
+    - kubernetes
+    - argocd
+    - vault
+spec: 
   type: service
   owner: user:guest
   lifecycle: experimental
