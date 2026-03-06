@@ -95,6 +95,13 @@ spec:
         defaultBranch: ${{ parameters.repoBranchName }}
         repoVisibility: public
 
+    - id: register
+      name: Registering the Catalog Info Component
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
     - id: configCodeTemplate
       name: Generating the Config Code Component
       action: fetch:template
@@ -143,12 +150,7 @@ spec:
                 selfHeal: true
               syncOptions:
                 - CreateNamespace=true
-    - id: register
-      name: Registering the Catalog Info Component
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: /catalog-info.yaml
+
   output:
     links:
       - title: Open the Source Code Repository
