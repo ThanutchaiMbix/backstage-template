@@ -5,7 +5,7 @@ metadata:
   title: ${{ values.appName }}
   annotations:
     vault.io/secrets-path: ${{ values.secretsPath }}
-    vault.io/secrets-engine: ${{ vault.secretEngine }}
+    vault.io/secrets-engine: ${{ values.vaultSecretEngine }}
     github.com/project-slug: ${{ values.orgName }}/${{ values.appName }}
     backstage.io/kubernetes-id: ${{ values.appName }}
     backstage.io/kubernetes-label-selector: 'app=${{ values.appName }}'
